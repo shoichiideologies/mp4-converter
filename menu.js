@@ -1,15 +1,21 @@
-'use strict';
-const path = require('path');
-const {app, Menu, shell} = require('electron');
-const {
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const { app, Menu, shell } = require('electron');
+
+import path from 'path';
+import {
 	is,
 	appMenu,
 	aboutMenuItem,
 	openUrlMenuItem,
 	openNewGitHubIssue,
 	debugInfo,
-} = require('electron-util');
-const config = require('./config.js');
+} from 'electron-util';
+import * as config from './config.js';
 
 const showPreferences = () => {
 	// Show the app's preferences here
@@ -66,8 +72,7 @@ const debugSubmenu = [
 	{
 		label: 'Show App Data',
 		click() {
-			shell.openItem(app.getPath('userData'));
-		},
+			shell.openPath(app.getPath('userData'));		},
 	},
 	{
 		type: 'separator',
@@ -176,4 +181,4 @@ if (is.development) {
 	});
 }
 
-module.exports = Menu.buildFromTemplate(template);
+export default Menu.buildFromTemplate(template);

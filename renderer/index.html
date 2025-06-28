@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MP4 Converter</title>
+    <link rel="stylesheet" href="./index.css">
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.2/dist/ffmpeg.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>MP4 Converter</h1>
+        <div>
+          <label for="video">Upload video file:</label>
+          <input type="file" id="video" accept="video/*">
+          <button id="convertBtn">Convert</button>
+          <a id="downloadLink" style="display:none; margin-left: 10px;">Download Converted MP4</a>
+        </div>
+      </header>
+      <section class="main"></section>
+      <footer></footer>
+    </div>
+    <script type="module" src="/renderer.js"></script>  </body>
+</html>

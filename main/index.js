@@ -1,20 +1,29 @@
-'use strict';
-const path = require('path');
-const {app, BrowserWindow, Menu} = require('electron');
-/// const {autoUpdater} = require('electron-updater');
-const {is} = require('electron-util');
-const unhandled = require('electron-unhandled');
-const debug = require('electron-debug');
-const contextMenu = require('electron-context-menu');
-const config = require('./config.js');
-const menu = require('./menu.js');
+
+import path from 'path';
+
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const { app, BrowserWindow, Menu } = require('electron');
+
+// import { autoUpdater } from 'electron-updater';
+import { is } from 'electron-util';
+import unhandled from 'electron-unhandled';
+import debug from 'electron-debug';
+import contextMenu from 'electron-context-menu';
+import { appId } from '../config.js';
+
+import menu from '../menu.js';
 
 unhandled();
 debug();
 contextMenu();
 
 // Note: Must match `build.appId` in package.json
-app.setAppUserModelId('com.company.AppName');
+app.setAppUserModelId(appId);
 
 // Uncomment this before publishing your first version.
 // It's commented out as it throws an error if there are no published versions.
@@ -36,7 +45,11 @@ const createMainWindow = async () => {
 		show: false,
 		width: 600,
 		height: 400,
-	});
+		webPreferences: {
+		  nodeIntegration: true,
+		  contextIsolation: false
+		}
+	  });
 
 	window_.on('ready-to-show', () => {
 		window_.show();
@@ -48,8 +61,7 @@ const createMainWindow = async () => {
 		mainWindow = undefined;
 	});
 
-	await window_.loadFile(path.join(__dirname, 'index.html'));
-
+	await window_.loadFile(path.join(__dirname, '../dist/index.html'));
 	return window_;
 };
 
@@ -85,6 +97,24 @@ app.on('activate', async () => {
 	Menu.setApplicationMenu(menu);
 	mainWindow = await createMainWindow();
 
-	const favoriteAnimal = config.get('favoriteAnimal');
-	mainWindow.webContents.executeJavaScript(`document.querySelector('header p').textContent = 'Your favorite animal is ${favoriteAnimal}'`);
 })();
+
+const { ipcMain, dialog } = require('electron');
+const fs = require('fs');
+
+ipcMain.on('save-video', async (event, { buffer, filename }) => {
+  const { filePath } = await dialog.showSaveDialog({
+    defaultPath: filename,
+    filters: [{ name: 'MP4 Video', extensions: ['mp4'] }]
+  });
+
+  if (filePath) {
+    fs.writeFile(filePath, Buffer.from(buffer), (err) => {
+      if (err) {
+        console.error('Error saving file:', err);
+      } else {
+        console.log('File saved to:', filePath);
+      }
+    });
+  }
+});

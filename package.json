@@ -1,6 +1,8 @@
 {
 	"name": "app-name",
-	"productName": "App Name",
+	"main": "main.cjs",
+	"type": "module",
+	"productName": "MP4 Converter",
 	"version": "0.0.0",
 	"description": "The best app ever",
 	"license": "MIT",
@@ -11,15 +13,18 @@
 		"url": "https://sindresorhus.com"
 	},
 	"scripts": {
-		"postinstall": "electron-builder install-app-deps",
-		"lint": "xo",
-		"test": "npm run lint",
-		"start": "electron .",
-		"pack": "electron-builder --dir",
-		"dist": "electron-builder --macos --linux --windows",
-		"release": "np"
+	"postinstall": "electron-builder install-app-deps",
+	"lint": "xo",
+	"test": "npm run lint",
+	"start": "electron .",
+	"pack": "electron-builder --dir",
+	"dist": "electron-builder --macos --linux --windows",
+	"release": "np",
+	"dev": "vite",
+	"build": "vite build"
 	},
 	"dependencies": {
+		"@ffmpeg/ffmpeg": "^0.12.15",
 		"electron-context-menu": "^3.4.0",
 		"electron-debug": "^3.2.0",
 		"electron-store": "^8.1.0",
@@ -31,6 +36,7 @@
 		"electron": "^13.0.0",
 		"electron-builder": "^23.3.3",
 		"np": "^7.6.2",
+		"vite": "^6.3.5",
 		"xo": "^0.51.0"
 	},
 	"xo": {
